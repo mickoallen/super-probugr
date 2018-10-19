@@ -5,6 +5,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#intellij
+misc.xml
+modules.xml
+*.iml
+vcs.xml
+
 # Runtime data
 pids
 *.pid
