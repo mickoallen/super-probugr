@@ -5,8 +5,8 @@ const ProtoFileHandler = require('../middleware/ProtoFileHandler');
 const multer  = require('multer');
 const fs = require('fs');
 
-const baseProtoDirecotry = "/tmp/protos";
-const baseUploadDirectory = "/tmp/uploads";
+const baseProtoDirecotry = "/usr/local/protos";
+const baseUploadDirectory = "/usr/local/uploads";
 
 exports.upload = async (req, res) => {
 

@@ -12,9 +12,13 @@ Code was based on this template - https://github.com/aturingmachine/mevn-stack (
 
 Lot's of cleanup needs to happen, naming, organization etc.
 
+##Docker
+To build `docker build -t superprobugr .`.
+To run `docker run -p 8080:8080 superprobugr`.
+
 ## Installation
 
-Requires Node >=7.0
+Requires Node >=8.0, NPM >=5
 
 `npm install`
 
