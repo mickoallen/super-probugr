@@ -1,14 +1,14 @@
 # Super Probugr
 
-###Goals of Super Probugr
+### Goals of Super Probugr
 Create a simple UI for interfacing with Kafka and gRPC using protobufs.
 
-####Workflow
+#### Workflow
 A user should be able to...
 1. Upload their proto files.
 2. From a JSON body, send messages to Kafka or call gRPC service methods.
 
-####Todo list
+#### Todo list
 |Feature|Status|
 |---|---|
 |Upload/Delete proto files|done (needs improving)|
