@@ -1,0 +1,17 @@
+{
+  "hotelViewProto":{
+    "accountUuid":"accountUuid",
+    "propertyName":"property name",
+    "hotelViewId":"hotel view id",
+    "alternateCodeProto": [
+      {
+        "code":"a code",
+        "accountUuid":"alt code account uuid"
+      }
+    ],
+    "multiLanguageMetadataProto":[
+
+    ]
+  },
+  "hotelViewActionProto":2
+}
