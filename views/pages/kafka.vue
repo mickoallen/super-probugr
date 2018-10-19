@@ -1,38 +1,76 @@
 <template>
 
     <v-container class="pa-0">
-        <v-container>
+        <v-container grid-list-md>
             <template>
-                <v-layout row>
-                    <v-flex>
+                <v-layout>
+                    <v-flex xs8>
                         <v-card>
                             <v-toolbar class="primary primaryText--text">
-                                <v-toolbar-title> Welcome to the Kafka Page</v-toolbar-title>
+                                <v-toolbar-title> Kafka</v-toolbar-title>
                             </v-toolbar>
                             <v-container fluid>
                                 <v-card-text>
                                     <v-form ref="form">
                                         <v-text-field label="Server URL" v-model="serverUrl"> </v-text-field>
                                         <v-text-field label="Topic" v-model="topic"> </v-text-field>
-                                        <v-textarea label="Message Body" v-model="messageBody" autoGrow="true"  ></v-textarea>
                                         <v-select v-model="selectedProtoFilename" :items="protoFilenames" :hint="`Proto file`" persistent-hint @change="populateMessageModels"></v-select>
                                         <v-select v-model="selectedMessageName" :items="messageModels" :hint="`Message model`" persistent-hint></v-select>
+                                        <v-textarea label="Message Body" v-model="messageBody" autoGrow  ></v-textarea>
                                     </v-form>
                                     <br />
                                     <v-btn @click="sendMessage()" block :disabled="disableSendMessageButton()" :loading="!messageSent">Send message</v-btn>
                                 </v-card-text>
                             </v-container>
                         </v-card>
-
-
+                        <br />
                         <v-card>
-                            <v-btn @click="clearLog()">Clear log</v-btn>
                             <v-container fluid>
+                                <v-btn block @click="clearLog()">Clear log</v-btn>
                                 <span  v-if="kafkaResponseLog.length">
                                     <v-label v-for="logItem in kafkaResponseLog">
                                         {{logItem}}
                                         <br />
                                     </v-label>
+                                </span>
+                            </v-container>
+                        </v-card>
+                    </v-flex>
+
+                    <v-flex fluid>
+                        <v-card>
+                            <v-toolbar class="primary primaryText--text">
+                                <v-toolbar-title>History</v-toolbar-title>
+                            </v-toolbar>
+                            <v-container fluid>
+                                <v-btn @click="clearHistory()" block>Clear history</v-btn>
+                                <span  v-if="requestHistory.length">
+                                    <v-flex v-for="historyItem in requestHistory">
+                                        <v-expansion-panel>
+                                            <v-expansion-panel-content>
+                                                <div slot="header">{{historyItem.messageName}}</div>
+                                                <v-container grid-list-md text-xs-center>
+                                                    <v-layout row>
+                                                            <v-flex xs-6 class="text-xs-left">
+                                                                <v-btn block @click="applyHistoryItem(historyItem)">Apply</v-btn>
+                                                                <v-spacer></v-spacer>
+                                                                <v-label>
+                                                                    Server URL: {{historyItem.kafkaServerUrl}}
+                                                                    <br />
+                                                                    Topic: {{historyItem.topic}}
+                                                                    <br />
+                                                                    Proto file: {{historyItem.filename}}
+                                                                    <br />
+                                                                    Message Name: {{historyItem.messageName}}
+                                                                </v-label>
+                                                                <v-textarea label="Message Body" v-model="historyItem.body" readonly></v-textarea>
+                                                            </v-flex>
+
+                                                    </v-layout>
+                                                </v-container>
+                                            </v-expansion-panel-content>
+                                        </v-expansion-panel>
+                                    </v-flex>
                                 </span>
                             </v-container>
                         </v-card>
@@ -59,7 +97,8 @@
             messageModels: [],
             isLoadingMessageNames: false,
             kafkaResponseLog:[],
-            messageSent: true
+            messageSent: true,
+            requestHistory: []
         }),
 
         methods: {
@@ -94,11 +133,13 @@
                         console.log("Message sent");
                         this.setKafkaResponseText(response);
                         this.messageSent = true;
+                        this.loadRequestHistory();
                     })
                     .catch(e => {
                         console.log("Error sending message");
                         this.setKafkaResponseText("Error: " + e.response.data.message);
                         this.messageSent = true;
+                        this.loadRequestHistory();
                     });
             },
 
@@ -136,6 +177,16 @@
                 this.isLoadingMessageNames = false;
             },
 
+            applyHistoryItem(historyItem){
+                this.selectedProtoFilename = historyItem.filename;
+                this.messageBody = historyItem.body;
+                this.serverUrl = historyItem.kafkaServerUrl;
+                this.topic = historyItem.topic;
+
+                this.populateMessageModels(historyItem.filename);
+                this.selectedMessageName = historyItem.messageName;
+            },
+
             disableSendMessageButton(){
                 if (!this.serverUrl ||
                     !this.topic ||
@@ -153,11 +204,35 @@
                 while(this.kafkaResponseLog.length){
                     this.kafkaResponseLog.pop()
                 }
-                this.kafkaResponseText = "";
+            },
+
+            clearHistory(){
+                http
+                    .delete("/kafka/history")
+                    .then(response => {
+                    })
+                    .catch(e => {
+                        console.error("Error clearing request history");
+                    });
+                while(this.requestHistory.length){
+                    this.requestHistory.pop()
+                }
+            },
+
+            loadRequestHistory(){
+                http
+                    .get("/kafka/history")
+                    .then(response => {
+                        this.requestHistory = response.data.kafkaRequests;
+                    })
+                    .catch(e => {
+                        console.error("Error getting request history");
+                    });
             }
         },
 
         mounted() {
+            this.loadRequestHistory();
             this.reloadProtofiles();
         }
 

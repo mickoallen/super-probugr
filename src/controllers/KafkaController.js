@@ -1,4 +1,5 @@
 const { ProtoObject } = require('../database/models');
+const { KafkaRequest } = require('../database/models');
 const trunks = require('trunks-log');
 const log = new trunks('KAFKA');
 const protobuf = require('protobufjs');
@@ -12,6 +13,7 @@ exports.sendKafkaMessage = async (req, res) => {
     }
 
     const request = req.body;
+    saveRequest(request);
 
     //get the proto file
     const protoFileMongo = await ProtoObject.findOne({'filename': request.filename}).exec();
@@ -51,6 +53,41 @@ exports.sendKafkaMessage = async (req, res) => {
         res.status(200).end();
     });
 };
+
+exports.loadRequestHistory = async (req, res) => {
+    await KafkaRequest.find().exec()
+        .then(kafkaRequests => {
+            log.success('Retrieved all {} kafka requests', kafkaRequests.length);
+            res.json({ kafkaRequests: kafkaRequests});
+        })
+        .catch(err => {
+            log.error(err, 'Could not retrieve kafkaRequests: {}', err.message);
+            res.json({ error: err, message: "Could not retrieve kafkaRequests"}).status(500);
+        })
+};
+
+exports.clearHistory = async (req, res) => {
+    await KafkaRequest.remove({}).exec()
+        .then(request => {
+            log.success('Clear kafka requests');
+            res.json({});
+        })
+        .catch(err => {
+            log.error(err, 'Could not clear kafkaRequests', err.message);
+            res.json({}).status(500);
+        });
+}
+
+function saveRequest(requestBody) {
+
+    const kafkaRequest = new KafkaRequest(requestBody);
+    kafkaRequest.save()
+        .then(savedRequest => {
+            log.success("saved request: {}", savedRequest);
+        }).catch(error => {
+            log.error(error, "Failed to save request" + requestBody);
+        });
+}
 
 function validateRequest(req) {
     const request = req.body;

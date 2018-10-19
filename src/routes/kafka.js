@@ -10,4 +10,8 @@ const router = express.Router();
 
 router.post('/', catchErrors(kafkaController.sendKafkaMessage));
 
+router.get('/history', catchErrors(kafkaController.loadRequestHistory));
+
+router.delete('/history', catchErrors(kafkaController.clearHistory));
+
 module.exports = router;
