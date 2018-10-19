@@ -8,7 +8,7 @@ A user should be able to...
 1. Upload their proto files.
 2. From a JSON body, send messages to Kafka or call gRPC service methods.
 
-Code was based on this template - https://github.com/aturingmachine/mevn-stack
+Code was based on this template - https://github.com/aturingmachine/mevn-stack (Still some of the user files left for when i need to look up shit)
 
 Lot's of cleanup needs to happen, naming, organization etc.
 
