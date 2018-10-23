@@ -6,10 +6,13 @@
             <v-container grid-list-md text-xs-center>
                 <v-layout row wrap>
                     <v-flex xs-6 class="text-xs-left">
-                        <v-card class="title">
+                        <v-card>
+                            Error Message: {{protoFile.errorMessage}}
+                        </v-card>
+                        <v-card>
                             Messages: {{ protoFile.messageNames }}
                         </v-card>
-                        <v-card class="title">
+                        <v-card>
                             Services: {{ protoFile.serviceNames }}
                         </v-card>
                     </v-flex>

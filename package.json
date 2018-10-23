@@ -29,7 +29,6 @@
     "serve-favicon": "~2.4.5",
     "trunks-log": "^2.0.2",
     "vue": "^2.5.2",
-    "vue-json-editor": "^1.2.3",
     "vue-multiselect": "^2.1.3",
     "vue-router": "^3.0.1",
     "vue-upload-component": "^2.8.14",

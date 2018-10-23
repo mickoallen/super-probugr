@@ -40,8 +40,8 @@
       <v-toolbar-title> {{ title }} </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn @click="isDarkMode = !isDarkMode" icon>
-        <v-icon class="primaryText--text" v-if="!isDarkMode" > brightness_5 </v-icon>
-        <v-icon class="primaryText--text" v-else > brightness_3 </v-icon>
+        <v-icon class="primaryText--text" v-if="!isDarkMode" > invert_colors </v-icon>
+        <v-icon class="primaryText--text" v-else > invert_colors </v-icon>
       </v-btn>
     </v-toolbar>
 
@@ -83,19 +83,19 @@ export default {
           router: true
         },
         {
-            icon: "account_circle",
+            icon: "assignment",
             title: "Proto Files",
             href: "/#/proto-files",
             router: true
         },
         {
-            icon: "account_circle",
+            icon: "repeat",
             title: "gRPC",
             href: "/#/grpc",
             router: true
         },
         {
-            icon: "account_circle",
+            icon: "label_important",
             title: "Kafka",
             href: "/#/kafka",
             router: true

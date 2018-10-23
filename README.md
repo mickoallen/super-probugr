@@ -18,7 +18,7 @@ To run `docker run -p 8080:8080 superprobugr`.
 
 ## Installation
 
-Requires Node >=8.0, NPM >=5
+Requires Node >=8.0, NPM >=5git
 
 `npm install`
 
@@ -38,15 +38,15 @@ Requires Node >=8.0, NPM >=5
 ## Todo list
 |Feature|Status|
 |---|---|
-|Upload/Delete proto files|done (needs improving)|
+|Upload/Delete proto files|done|
 |Interface with Kafka|done|
 |Interface with gRPC|todo|
-|Keep history of previous request, and be able to load them back into the UI|todo|
-|Package into Dockerfile for easy use|todo| 
+|Change json input and display boxes to a json formatted component|todo|
+|Remember user preferences for theme select|todo|
+|Keep history of previous request, and be able to load them back into the UI|done (for kafka)|
+|Package into Dockerfile for easy use|done| 
 
 ## Known Issues
-- Protofiles are saved to /tmp/protos, if the OS decides to clear this they will be lost.
-- The protofiles are inspected during upload, extracting the method and service names. This needs to be moved out and not saved in the db. The message names should be read at runtime and returned to the UI immediately. The issue with reading them during the upload is if the user is uploading multiple files with dependencies between them they would need to upload them in a specific order.
 - Hover and click states doesn't work with the 'Select Proto Files' button in the upload dialogue.
 
 

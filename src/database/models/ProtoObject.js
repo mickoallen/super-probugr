@@ -10,14 +10,6 @@ const definition = {
     filepath: {
         type: String,
         required: true
-    },
-    messageNames: {
-        type:Array,
-        required: false
-    },
-    serviceNames: {
-        type:Array,
-        required: false
     }
 };
 

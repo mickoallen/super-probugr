@@ -7,7 +7,7 @@
                     <v-flex xs8>
                         <v-card>
                             <v-toolbar class="primary primaryText--text">
-                                <v-toolbar-title> Kafka</v-toolbar-title>
+                                <v-toolbar-title>Kafka</v-toolbar-title>
                             </v-toolbar>
                             <v-container fluid>
                                 <v-card-text>
@@ -45,7 +45,7 @@
                             <v-container fluid>
                                 <v-btn @click="clearHistory()" block>Clear history</v-btn>
                                 <span  v-if="requestHistory.length">
-                                    <v-flex v-for="historyItem in requestHistory">
+                                    <v-flex v-for="historyItem in requestHistory" >
                                         <v-expansion-panel>
                                             <v-expansion-panel-content>
                                                 <div slot="header">{{historyItem.messageName}}</div>
@@ -65,7 +65,6 @@
                                                                 </v-label>
                                                                 <v-textarea label="Message Body" v-model="historyItem.body" readonly></v-textarea>
                                                             </v-flex>
-
                                                     </v-layout>
                                                 </v-container>
                                             </v-expansion-panel-content>
@@ -188,16 +187,11 @@
             },
 
             disableSendMessageButton(){
-                if (!this.serverUrl ||
+                return !this.serverUrl ||
                     !this.topic ||
                     !this.messageBody ||
                     !this.selectedProtoFilename ||
-                    !this.selectedMessageName) {
-                    return true
-                } else {
-                    return false
-                }
-                return false;
+                    !this.selectedMessageName;
             },
 
             clearLog(){

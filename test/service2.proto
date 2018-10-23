@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.mick.iscool";
+
+service TestService {
+    rpc TestServiceMethod (TestRequestProto) returns (TestResultProto);
+    rpc AnotherServiceMethod (TestRequestProto) returns (TestResultProto);
+}
+service AnotherTestService {
+    rpc ADifferentServiceMethod (ADifferentRequestProto) returns (TestResultProto);
+    rpc AnotherDifferentServiceMethod (AnotherDifferentRequestProto) returns (TestResultProto);
+}
+
+message TestRequestProto {
+    string aString = 1;
+}
+
+message ADifferentRequestProto {
+    string aString = 1;
+}
+
+message AnotherDifferentRequestProto {
+    string aString = 1;
+}
+
+message TestResultProto {
+    string anotherString = 1;
+}

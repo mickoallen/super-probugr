@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.mick.iscool";
+
+
+service TestService {
+    rpc TestServiceMethod (TestRequestProto) returns (TestResultProto);
+}
+
+message TestRequestProto {
+    string aString = 1;
+}
+
+message TestResultProto {
+    string anotherString = 1;
+}

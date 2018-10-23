@@ -10,14 +10,13 @@ const baseUploadDirectory = "/usr/local/uploads";
 
 exports.upload = async (req, res) => {
 
-    // const protoFileHandler = new ProtoFileHandler('/home/mick/MickProjects/super-probugr/test/test1.proto') ;
-
     const upload = multer({ dest: baseUploadDirectory }).single("file");
     let uploadedFilename = "";
     let originalFilename = "";
 
     upload(req, res, function (err) {
         if(err){
+            console.error(err, "error uploading file");
             return res.end("error uploading file");
         }
         console.log("File uploaded - " + req.file.filename);
@@ -27,12 +26,9 @@ exports.upload = async (req, res) => {
 
         fs.copyFileSync(baseUploadDirectory + "/" + uploadedFilename, baseProtoDirecotry + "/" + originalFilename);
 
-        let protoFileHandler = new ProtoFileHandler(baseProtoDirecotry + "/" + originalFilename);
         let protoFileToCreate = new ProtoObject({
             filename: originalFilename,
-            filepath : baseProtoDirecotry + "/" + originalFilename,
-            messageNames: protoFileHandler.messageNames,
-            serviceNames: protoFileHandler.services
+            filepath : baseProtoDirecotry + "/" + originalFilename
         });
 
         protoFileToCreate.save()
@@ -63,7 +59,28 @@ exports.index = async (req, res) => {
     await ProtoObject.find().exec()
         .then(protoFiles => {
             log.success('Retrieved all {} proto files', protoFiles.length);
-            res.json({ protoFiles: protoFiles});
+            let protoFilesJson = [];
+
+            for(let protoFile of protoFiles){
+                let protoFileHandler;
+                try{
+                    protoFileHandler = new ProtoFileHandler(protoFile.filepath);
+                    protoFilesJson.push({
+                        filename: protoFile.filename,
+                        filepath : protoFile.filepath,
+                        messageNames: protoFileHandler.messageNames,
+                        serviceNames: protoFileHandler.services
+                    })
+                }catch(err){
+                    protoFilesJson.push({
+                        filename: protoFile.filename,
+                        filepath : protoFile.filepath,
+                        errorMessage: "There are errors with this proto file: " + err
+                    })
+                }
+            }
+
+            res.json({ protoFiles: protoFilesJson});
         })
         .catch(err => {
             log.error(err, 'Could not retrieve protoFiles: {}', err.message);
