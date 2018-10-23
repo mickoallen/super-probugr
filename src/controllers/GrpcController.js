@@ -1,6 +1,7 @@
 const { ProtoFile } = require('../database/models');
 const trunks = require('trunks-log');
 const log = new trunks('GRPC');
+const GRPCClient = require('../middleware/GRPCClient');
 
 exports.callService = async (req, res) => {
     req.toString();
@@ -12,6 +13,8 @@ exports.callService = async (req, res) => {
     const protoFile = protoFileMongo._doc;
 
     protoFile.toString();
+
+    // GRPCClient grpcClient = new GRPCClient()
 };
 
 exports.index = async (req, res) => {

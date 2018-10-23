@@ -11,7 +11,7 @@ class GRPCClient{
         this.client = GRPCClient.loadClient(this.serviceName, serverAddress, packageDefinition);
     }
 
-    defaultCallback = (error, response) => {
+    defaultCallback(error, response){
         if (error) {
             console.error(error.message);
         }
@@ -36,7 +36,7 @@ class GRPCClient{
         const method = this.getMethod(methodName);
 
         if (typeof callback !== 'function') {
-            callback = this._defaultCallback;
+            callback = this.defaultCallback;
         }
 
         if (method.requestStream && method.responseStream) {
@@ -172,3 +172,5 @@ class GRPCClient{
         return methods
     }
 }
+
+module.exports = GRPCClient;

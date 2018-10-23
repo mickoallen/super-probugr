@@ -28,7 +28,7 @@ WORKDIR /usr/local/app
 RUN npm install
 
 #RUN npm install
-EXPOSE 8080 8080
+EXPOSE 8080
 
 RUN chmod +x run.sh
 CMD [ "/usr/local/app/run.sh" ]
