@@ -10,7 +10,6 @@
                 <v-card-text>
                   Upload proto files, do things, be cool.
                 </v-card-text>
-                <img src="../assets/protobugr.png">
               </v-container>
             </v-card>
           </v-flex>
