@@ -1,20 +1,37 @@
-const { ProtoFile } = require('../database/models');
+const { ProtoObject } = require('../database/models');
+const { GrpcRequest } = require('../database/models');
 const trunks = require('trunks-log');
 const log = new trunks('GRPC');
 const GRPCClient = require('../middleware/GRPCClient');
+const protobuf = require('protobufjs');
 
 exports.callService = async (req, res) => {
-    req.toString();
-    res.status(200);
-
     const request = req.body;
 
-    const protoFileMongo = await ProtoFile.findById(request.protoFileId).exec();
-    const protoFile = protoFileMongo._doc;
+    saveRequest(request);
 
-    protoFile.toString();
+    //get filepath - ensure it is still a proto
+    const protoFileMongo = await ProtoObject.findOne({'filename': request.filename}).exec();
 
-    // GRPCClient grpcClient = new GRPCClient()
+    let messageBodyAsJson;
+    try{
+        messageBodyAsJson = JSON.parse(request.body);
+    }catch (e) {
+        log.error(e, "invalid json");
+        res.status(500).json({status:"ERROR", message:"Invalid JSON"}).end();
+        return;
+    }
+
+    const grpcClient = new GRPCClient(request.serverUrl, request.serviceName, protoFileMongo.filepath);
+
+    grpcClient.invokeMethod(request.methodName, messageBodyAsJson, function (error, response) {
+        if(error){
+            log.error(error, "Error! " + error );
+            res.json({"errorMessage":error}).status(500).end();
+        }else{
+            res.json({"success":"yay","message":response}).status(200).end();
+        }
+    });
 };
 
 exports.index = async (req, res) => {
@@ -28,4 +45,38 @@ exports.index = async (req, res) => {
             log.error(err, 'Could not retrieve protoFiles: {}', err.message);
             res.json({ error: err, message: "Could not retrieve protoFiles"}).status(500);
         })
+};
+
+function saveRequest(requestBody){
+    const grpcRequest = new GrpcRequest(requestBody);
+    grpcRequest.save()
+        .then(savedRequest => {
+            log.success("saved request: {}", savedRequest);
+        }).catch(error => {
+        log.error(error, "Failed to save request" + requestBody);
+    });
+}
+
+exports.loadRequestHistory = async (req, res) => {
+    await GrpcRequest.find().exec()
+        .then(grpcRequests => {
+            log.success('Retrieved all {} grpc requests', grpcRequests.length);
+            res.json({ grpcRequests: grpcRequests});
+        })
+        .catch(err => {
+            log.error(err, 'Could not retrieve grpc requests: {}', err.message);
+            res.json({ error: err, message: "Could not retrieve grpc requests"}).status(500);
+        })
+};
+
+exports.clearHistory = async (req, res) => {
+    await GrpcRequest.remove({}).exec()
+        .then(request => {
+            log.success('Clear grpc requests');
+            res.json({});
+        })
+        .catch(err => {
+            log.error(err, 'Could not clear grpc requests', err.message);
+            res.json({}).status(500);
+        });
 };

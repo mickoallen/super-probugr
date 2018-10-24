@@ -50,20 +50,20 @@
                                     <v-flex v-for="historyItem in requestHistory">
                                         <v-expansion-panel>
                                             <v-expansion-panel-content>
-                                                <div slot="header">{{historyItem.messageName}}</div>
+                                                <div slot="header">{{historyItem.methodName}}</div>
                                                 <v-container grid-list-md text-xs-center>
                                                     <v-layout row>
                                                             <v-flex xs-6 class="text-xs-left">
                                                                 <v-btn block @click="applyHistoryItem(historyItem)">Apply</v-btn>
                                                                 <v-spacer></v-spacer>
                                                                 <v-label>
-                                                                    Server URL: {{historyItem.kafkaServerUrl}}
-                                                                    <br />
-                                                                    Topic: {{historyItem.topic}}
+                                                                    Server URL: {{historyItem.serverUrl}}
                                                                     <br />
                                                                     Proto file: {{historyItem.filename}}
                                                                     <br />
-                                                                    Message Name: {{historyItem.messageName}}
+                                                                    Service Name: {{historyItem.serviceName}}
+                                                                    <br />
+                                                                    Method Name: {{historyItem.methodName}}
                                                                 </v-label>
                                                                 <v-textarea label="Message Body" v-model="historyItem.body" readonly></v-textarea>
                                                             </v-flex>
@@ -216,13 +216,15 @@
             },
 
             applyHistoryItem(historyItem){
-                // this.selectedProtoFilename = historyItem.filename;
-                // this.messageBody = historyItem.body;
-                // this.serverUrl = historyItem.kafkaServerUrl;
-                // this.topic = historyItem.topic;
-                //
-                // this.populateMessageModels(historyItem.filename);
-                // this.selectedMessageName = historyItem.messageName;
+                this.selectedProtoFilename = historyItem.filename;
+                this.messageBody = historyItem.body;
+                this.serverUrl = historyItem.serverUrl;
+
+                this.changedProtofile();
+                this.selectedServiceName = historyItem.serviceName;
+                this.changedServiceName();
+                this.selectedMethodName = historyItem.methodName;
+                this.changedMethodName();
             },
 
             disableSendMessageButton(){
@@ -240,27 +242,27 @@
             },
 
             clearHistory(){
-                // http
-                //     .delete("/grpc/history")
-                //     .then(response => {
-                //     })
-                //     .catch(e => {
-                //         console.error("Error clearing request history");
-                //     });
-                // while(this.requestHistory.length){
-                //     this.requestHistory.pop()
-                // }
+                http
+                    .delete("/grpc/history")
+                    .then(response => {
+                    })
+                    .catch(e => {
+                        console.error("Error clearing request history");
+                    });
+                while(this.requestHistory.length){
+                    this.requestHistory.pop()
+                }
             },
 
             loadRequestHistory(){
-                // http
-                //     .get("/grpc/history")
-                //     .then(response => {
-                //         this.requestHistory = response.data.grpcRequests;
-                //     })
-                //     .catch(e => {
-                //         console.error("Error getting request history");
-                //     });
+                http
+                    .get("/grpc/history")
+                    .then(response => {
+                        this.requestHistory = response.data.grpcRequests;
+                    })
+                    .catch(e => {
+                        console.error("Error getting request history");
+                    });
             }
         },
 

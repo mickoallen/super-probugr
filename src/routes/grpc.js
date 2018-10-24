@@ -10,4 +10,8 @@ const router = express.Router();
 
 router.post('/', catchErrors(grpcController.callService));
 
+router.get('/history', catchErrors(grpcController.loadRequestHistory));
+
+router.delete('/history', catchErrors(grpcController.clearHistory));
+
 module.exports = router;

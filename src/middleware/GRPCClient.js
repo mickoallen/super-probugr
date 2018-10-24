@@ -1,5 +1,6 @@
 const grpc = require('grpc');
 const protoLoader = require('@grpc/proto-loader');
+const fs = require('fs');
 
 class GRPCClient{
 
@@ -14,6 +15,7 @@ class GRPCClient{
     defaultCallback(error, response){
         if (error) {
             console.error(error.message);
+            throw error;
         }
 
         if (response) {
@@ -100,7 +102,7 @@ class GRPCClient{
      * @returns {any}
      */
     getMethod(methodName) {
-        const method = this.methods.filter(m => m.originalName === methodName)[0];
+        const method = this.methods.filter(m => m.originalName.toLowerCase() === methodName.toLowerCase())[0];
 
         if (!method) {
             throw `${this.serviceName}: method ${methodName} not found. Is it defined in the proto file?`
@@ -138,14 +140,14 @@ class GRPCClient{
      * @param {object} packageDefinition
      * @returns {object}
      */
-    static loadClient(serviceName, serverAddress, packageDefinition) {
+     static loadClient(serviceName, serverAddress, packageDefinition) {
         const grpcObject = grpc.loadPackageDefinition(packageDefinition);
 
         if (!grpcObject[serviceName]) {
             throw `Service not found: ${serviceName}. Is it defined in the proto file?`
         }
 
-        const client = new grpc.Client[serviceName](serverAddress, grpc.credentials.createInsecure());
+        const client = new grpcObject[serviceName](serverAddress, grpc.credentials.createInsecure());
 
         if (!client) {
             throw `Couldn't connect to RPC server at ${serverAddress}. Is it running?`
