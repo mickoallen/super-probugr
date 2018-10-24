@@ -6,11 +6,10 @@ import './stylus/main.styl'
 
 Vue.use(Vuetify, {
   theme: {
-      primary: '#7A858D', //Main color
-      primaryText: '#241F1C', //Color for text on primary
-      secondary: '#66747D', //Color for active nav
-      lightText: '#F2F2F5',
-      accent: '#87B2CB'
+      primary: '#1B2A42', //Main color
+      primaryText: '#C7D6E9', //Color for text on primary
+      secondary: '#4A4A4A', //Color for active nav
+      lightText: '#87D1FF'
   }
 })
 
