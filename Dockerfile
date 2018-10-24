@@ -22,7 +22,6 @@ RUN mkdir -p /usr/local/protos
 RUN mkdir -p /usr/local/uploads
 
 COPY . /usr/local/app/
-COPY .env /usr/local/app/.env
 
 # Move to the app directory
 WORKDIR /usr/local/app
