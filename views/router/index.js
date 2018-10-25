@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-import usersPage from '../pages/users.vue'
 import homePage from '../pages/home.vue'
 import protoFilesPage from '../pages/protoFiles'
 import grpcPage from '../pages/grpc'
@@ -27,11 +26,6 @@ const router = new Router ({
           path: '/proto-files',
           name: 'protos',
           component: protoFilesPage
-        },
-        {
-          path: '/users',
-          name: 'users',
-          component: usersPage
         },
         {
           path: '/home',

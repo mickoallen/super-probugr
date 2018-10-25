@@ -1,7 +1,7 @@
 # Super Probugr
 
 ### Goals of Super Probugr
-Create a simple UI for interfacing with Kafka and gRPC using protobufs.
+Create a simple UI for interfacing with Kafka and gRPC using protobufs. This is a tool, not an example of a perfect js app.
 
 ### Workflow
 A user should be able to...
@@ -12,9 +12,8 @@ Code was based on this template - https://github.com/aturingmachine/mevn-stack (
 
 Lot's of cleanup needs to happen, naming, organization etc.
 
-## Docker
-To build `docker build -t superprobugr .`.
-To run `docker run -p 8080:8080 superprobugr`.
+## Usage
+To run `docker run -p 5052:5052 mickoallen\super-probugr:latest`.
 
 ## Installation
 
@@ -38,15 +37,13 @@ Requires Node >=8.0, NPM >=5git
 ## Todo list
 |Feature|Status|
 |---|---|
-|Upload/Delete proto files|done|
-|Interface with Kafka|done|
-|Interface with gRPC|todo|
 |Change json input and display boxes to a json formatted component|todo|
 |Remember user preferences for theme select|todo|
-|Keep history of previous request, and be able to load them back into the UI|done (for kafka)|
-|Package into Dockerfile for easy use|done| 
 
 ## Known Issues
 - Hover and click states doesn't work with the 'Select Proto Files' button in the upload dialogue.
+- Occasional race conditions trying to start the container.
+- Enum values in the JSON must be represented by their index as defined in the proto, no the associating value.
+
 
 

@@ -20,7 +20,7 @@ const { webRoutes } = require('./src/routes/index')
 mongoose.Promise = global.Promise
 
 // Connect to the database
-mongoose.connect('mongodb://localhost:27017', { useMongoClient: true })
+mongoose.connect('mongodb://localhost:57017', { useMongoClient: true })
 
 // Fail on connection error.
 mongoose.connection.on('error', error => { throw error })
@@ -53,4 +53,4 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 
-logs.success('App running on http://localhost:8080')
+logs.success('App running on http://localhost:' + process.env.PORT);

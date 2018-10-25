@@ -6,7 +6,7 @@
         <v-container fluid>
             <v-card-text>
                 <file-upload
-                        post-action="http://localhost:8080/api/proto-files/upload"
+                        post-action="http://localhost:5052/api/proto-files/upload"
                         extensions="proto"
                         :multiple="true"
                         :size="1024 * 1024 * 10"
