@@ -39,13 +39,13 @@
       
       <v-toolbar-title> {{ title }} </v-toolbar-title>
       <v-spacer></v-spacer>
+      {{version}}
       <v-btn @click="isDarkMode = !isDarkMode" icon>
         <v-icon class="primaryText--text" v-if="!isDarkMode" > invert_colors </v-icon>
         <v-icon class="primaryText--text" v-else > invert_colors </v-icon>
       </v-btn>
     </v-toolbar>
 
-    
     <main>
       <v-content>
         <v-container fluid >
@@ -69,12 +69,15 @@
 </template>
 
 <script>
+import VLabel from "vuetify/lib/components/VLabel/VLabel";
 export default {
-  data: () => {
+    components: {VLabel},
+    data: () => {
     return {
       clipped: true,
       drawer: true,
       fixed: false,
+      version: "v1.0.4",
       items: [
         {
           icon: "home",
@@ -108,7 +111,7 @@ export default {
       alertOpen: false,
       alertString: '',
       alertSuccess: false,
-      isDarkMode: false,
+      isDarkMode: true,
     };
   },
 

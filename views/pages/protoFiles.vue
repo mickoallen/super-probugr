@@ -28,9 +28,11 @@
                                           >
                                 </protoFileItem>
                             </span>
-
-                            <v-card v-else class="headline text-xs-center">No proto files to show, upload some.</v-card>
-
+                            <div v-else>
+                                <br/>
+                                <v-card flat class="subheading text-xs-center">No proto files to show, upload some.</v-card>
+                                <br/>
+                            </div>
                         </v-card>
                     </v-flex>
                 </v-layout>
@@ -50,7 +52,6 @@
             errors: [],
             protoFiles: [],
             protoFileToDelete: {},
-            alertSettings: {}, //this is to abstract our our alerts to make them easier and stop repeating code
             deleteDialog: false,
             addDialog: false,
             editName: "",

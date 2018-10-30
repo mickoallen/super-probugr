@@ -1,12 +1,15 @@
 <template>
     <v-expansion-panel>
         <v-expansion-panel-content class="elevation-24">
-            <div slot="header">{{ protoFile.filename }}</div>
+            <div v-if="protoFile.errorMessage" slot="header">{{ protoFile.filename }} - Proto contains errors</div>
+            <div v-else slot="header">
+                {{ protoFile.filename }}
+            </div>
             <hr>
             <v-container grid-list-md text-xs-center>
                 <v-layout row wrap>
                     <v-flex xs-6 class="text-xs-left">
-                        <v-card>
+                        <v-card v-if="protoFile.errorMessage">
                             Error Message: {{protoFile.errorMessage}}
                         </v-card>
                         <v-card>
@@ -33,8 +36,10 @@
 
 <script>
     import { http } from "../config/http.js"
+    import VLabel from "vuetify/lib/components/VLabel/VLabel";
 
     export default {
+        components: {VLabel},
         props: {
             protoFile: {
                 type: Object
