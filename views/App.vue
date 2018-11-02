@@ -77,7 +77,7 @@ export default {
       clipped: true,
       drawer: true,
       fixed: false,
-      version: "v1.0.4",
+      version: "v1.0.5",
       items: [
         {
           icon: "home",
