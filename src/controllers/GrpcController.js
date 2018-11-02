@@ -4,6 +4,7 @@ const trunks = require('trunks-log');
 const log = new trunks('GRPC');
 const GRPCClient = require('../middleware/GRPCClient');
 const protobuf = require('protobufjs');
+const moment = require('moment');
 
 exports.callService = async (req, res) => {
     const request = req.body;
@@ -47,8 +48,28 @@ exports.index = async (req, res) => {
         })
 };
 
-function saveRequest(requestBody){
-    const grpcRequest = new GrpcRequest(requestBody);
+async function saveRequest(requestBody){
+    var now = new Date();
+    requestBody.createdAtPretty = moment(now).format('llll');
+    requestBody.createdAtRaw = now;
+
+    var grpcRequest = await GrpcRequest.findOne(
+        {
+            body: requestBody.body,
+            filename: requestBody.filename,
+            serverUrl: requestBody.serverUrl,
+            methodName: requestBody.methodName,
+            serviceName: requestBody.serviceName
+        }
+    ).exec();
+
+    if(grpcRequest){
+        grpcRequest.$set('createdAtPretty', requestBody.createdAtPretty);
+        grpcRequest.$set('createdAtRaw', requestBody.createdAtRaw);
+    }else{
+        grpcRequest = new GrpcRequest(requestBody);
+    }
+
     grpcRequest.save()
         .then(savedRequest => {
             log.success("saved request: {}", savedRequest);
@@ -58,7 +79,7 @@ function saveRequest(requestBody){
 }
 
 exports.loadRequestHistory = async (req, res) => {
-    await GrpcRequest.find().exec()
+    await GrpcRequest.find().sort({createdAtRaw: -1}).exec()
         .then(grpcRequests => {
             log.success('Retrieved all {} grpc requests', grpcRequests.length);
             res.json({ grpcRequests: grpcRequests});

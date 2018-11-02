@@ -50,7 +50,7 @@
                                     <v-flex v-for="historyItem in requestHistory">
                                         <v-expansion-panel>
                                             <v-expansion-panel-content>
-                                                <div slot="header">{{historyItem.methodName}}</div>
+                                                <div slot="header">{{historyItem.methodName}}<br />{{historyItem.createdAtPretty}}</div>
                                                 <v-container grid-list-md text-xs-center>
                                                     <v-layout row>
                                                             <v-flex xs-6 class="text-xs-left">

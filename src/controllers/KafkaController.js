@@ -4,6 +4,7 @@ const trunks = require('trunks-log');
 const log = new trunks('KAFKA');
 const protobuf = require('protobufjs');
 const kafka = require('node-rdkafka');
+const moment = require('moment');
 
 exports.sendKafkaMessage = async (req, res) => {
     let errorMessage = validateRequest(req,res);
@@ -13,7 +14,7 @@ exports.sendKafkaMessage = async (req, res) => {
     }
 
     const request = req.body;
-    saveRequest(request);
+    await saveRequest(request);
 
     //get the proto file
     const protoFileMongo = await ProtoObject.findOne({'filename': request.filename}).exec();
@@ -55,7 +56,7 @@ exports.sendKafkaMessage = async (req, res) => {
 };
 
 exports.loadRequestHistory = async (req, res) => {
-    await KafkaRequest.find().exec()
+    await KafkaRequest.find().sort({createdAtRaw: -1}).exec()
         .then(kafkaRequests => {
             log.success('Retrieved all {} kafka requests', kafkaRequests.length);
             res.json({ kafkaRequests: kafkaRequests});
@@ -78,15 +79,35 @@ exports.clearHistory = async (req, res) => {
         });
 }
 
-function saveRequest(requestBody) {
+async function saveRequest(requestBody) {
+    var now = new Date();
+    requestBody.createdAtPretty = moment(now).format('llll');
+    requestBody.createdAtRaw = now;
 
-    const kafkaRequest = new KafkaRequest(requestBody);
+    var kafkaRequest = await KafkaRequest.findOne(
+        {
+            body: requestBody.body,
+            filename: requestBody.filename,
+            kafkaServerUrl: requestBody.kafkaServerUrl,
+            messageName: requestBody.messageName,
+            topic: requestBody.topic
+        }
+    ).exec();
+
+    //if it is an existing request just updated the date
+    if(kafkaRequest){
+        kafkaRequest.$set('createdAtPretty', requestBody.createdAtPretty);
+        kafkaRequest.$set('createdAtRaw', requestBody.createdAtRaw);
+    }else{
+        kafkaRequest = new KafkaRequest(requestBody);
+    }
+
     kafkaRequest.save()
         .then(savedRequest => {
             log.success("saved request: {}", savedRequest);
         }).catch(error => {
-            log.error(error, "Failed to save request" + requestBody);
-        });
+        log.error(error, "Failed to save request" + requestBody);
+    });
 }
 
 function validateRequest(req) {

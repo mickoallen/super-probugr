@@ -1,7 +1,7 @@
 <template>
     <v-expansion-panel>
         <v-expansion-panel-content class="elevation-24">
-            <div v-if="protoFile.errorMessage" slot="header">{{ protoFile.filename }} - Proto contains errors</div>
+            <div v-if="protoFile.errorMessage" slot="header" class="error--text">{{ protoFile.filename }} - Proto contains errors</div>
             <div v-else slot="header">
                 {{ protoFile.filename }}
             </div>

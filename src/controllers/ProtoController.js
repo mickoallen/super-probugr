@@ -45,7 +45,11 @@ exports.delete = async (req, res) => {
     const protoFileMongo = await ProtoObject.findOne({'filename': request.protofileName}).exec();
 
     //delete actual file
-    fs.unlink(protoFileMongo.filepath);
+    fs.exists(protoFileMongo.filepath, function (exists) {
+        if(exists){
+            fs.unlink(protoFileMongo.filepath);
+        }
+    });
 
     await ProtoObject.findByIdAndRemove(protoFileMongo._id).exec()
         .then(protoFiles => {

@@ -7,8 +7,8 @@ import './stylus/main.styl'
 Vue.use(Vuetify, {
   theme: {
       primary: '#061218', //Main color
-      primaryText: '#8F2AA3', //Color for text on primary
-      secondary: '#F2A6FA', //Color for active nav
+      primaryText: '#F2A6FA', //Color for text on primary
+      secondary: '#4527A0', //Color for active nav
       lightText: '#F2A6FA'
   }
 })

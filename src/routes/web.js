@@ -9,4 +9,8 @@ router.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '../public/index.html'))
 })
 
+router.get('/public/images/favicon.png', (req, res) => {
+    res.sendFile(path.join(__dirname + '../public/images/favicon.png'))
+})
+
 module.exports = router
