@@ -12,7 +12,7 @@ A user should be able to...
 ## Usage
 To run with host networking `docker run -d --network host -n super-probugr mickoallen/super-probugr:latest`. This is recommended since it makes calling back to your local gRPC services and Kafka broker simpler, but only works in environments where host networking is supported, such as linux.
 
-To run without host networking `docker run -d -p 5052:5052 -n super-probugr mickoallen/super-probugr:latest`.
+To run without host networking `docker run -d -p 5052:5052 --name super-probugr mickoallen/super-probugr:latest`.
 
 
 ## Installation
