@@ -19,7 +19,14 @@
                                         <v-textarea label="Message Body" v-model="messageBody" autoGrow  ></v-textarea>
                                     </v-form>
                                     <br />
-                                    <v-btn @click="sendMessage()" block :disabled="disableSendMessageButton()" :loading="!messageSent">Send message</v-btn>
+                                    <v-layout>
+                                        <v-flex>
+                                            <v-btn @click="sendMessage()" block :disabled="disableSendMessageButton()" :loading="messageLoading">Send message</v-btn>
+                                        </v-flex>
+                                        <v-flex>
+                                            <v-btn @click="stopSendingMessage()" block :disabled="disableStopMessageButton()">Stop</v-btn>
+                                        </v-flex>
+                                    </v-layout>
                                 </v-card-text>
                             </v-container>
                         </v-card>
@@ -96,7 +103,8 @@
             messageModels: [],
             isLoadingMessageNames: false,
             kafkaResponseLog:[],
-            messageSent: true,
+            messageLoading: false,
+            messageReceived: false,
             requestHistory: []
         }),
 
@@ -115,7 +123,9 @@
             },
 
             sendMessage(){
-                this.messageSent = false;
+                this.messageLoading = true;
+                this.messageReceived = false;
+
                 let kafkaSendMessageRequest = {
                     filename: this.selectedProtoFilename,
                     messageName: this.selectedMessageName,
@@ -126,20 +136,34 @@
 
                 this.setKafkaResponseText("Sending message...");
                 console.log("sending message to kafka");
+
                 http
                     .post("/kafka", kafkaSendMessageRequest)
                     .then(response => {
-                        console.log("Message sent");
-                        this.setKafkaResponseText(response);
-                        this.messageSent = true;
-                        this.loadRequestHistory();
+                        if(!this.messageReceived) {
+                            console.log("Message sent");
+                            this.setKafkaResponseText(response);
+                            this.messageReceived = true;
+                            this.loadRequestHistory();
+                        }
+                        this.messageLoading = false;
                     })
                     .catch(e => {
-                        console.log("Error sending message");
-                        this.setKafkaResponseText("Error: " + e.response.data.message);
-                        this.messageSent = true;
-                        this.loadRequestHistory();
+                        if(!this.messageReceived) {
+                            console.log("Error sending message");
+                            this.setKafkaResponseText("Error: " + e.response.data.message);
+                            this.messageReceived = true;
+                            this.loadRequestHistory();
+                        }
+                        this.messageLoading = false;
                     });
+            },
+
+            stopSendingMessage(){
+                this.messageReceived = true;
+                this.messageLoading = false;
+                this.setKafkaResponseText("Stopped.");
+                this.loadRequestHistory();
             },
 
             setKafkaResponseText(text){
@@ -184,6 +208,10 @@
 
                 this.populateMessageModels(historyItem.filename);
                 this.selectedMessageName = historyItem.messageName;
+            },
+
+            disableStopMessageButton(){
+                return !this.messageLoading
             },
 
             disableSendMessageButton(){
