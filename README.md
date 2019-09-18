@@ -15,6 +15,20 @@ To run with host networking `docker run -d --network host mickoallen/super-probu
 To run without host networking `docker run -d -p 5052:5052 mickoallen/super-probugr:latest`.
 
 
+
+
+Upload proto files:
+
+<img src="/assets/uploadProtoFiles.png" width="500px" />
+
+Connect to gRPC server:
+
+<img src="/assets/connectToGrpc.png" width="500px" />
+
+Send messages to kafka:
+
+<img src="/assets/sendToKafka.png" width="500px" /> 
+
 ## Installation
 
 Requires Node >=8.0, NPM >=5
