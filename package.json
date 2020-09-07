@@ -34,7 +34,7 @@
     "vue-router": "^3.0.1",
     "vue-upload-component": "^2.8.14",
     "vuetify": "^1.0.19",
-    "yargs-parser": "^11.0.0"
+    "yargs-parser": "^13.1.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
