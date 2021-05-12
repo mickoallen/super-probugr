@@ -18,7 +18,7 @@
     "debug": "~2.6.9",
     "dotenv": "^4.0.0",
     "express": "^4.16.3",
-    "grpc": "^1.13.0",
+    "grpc": "^1.24.9",
     "grpc-caller": "^0.4.0",
     "grpc-inspect": "latest",
     "moment": "^2.22.2",
